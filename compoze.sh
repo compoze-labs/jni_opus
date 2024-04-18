@@ -14,6 +14,4 @@ function copy_lib(){
 }
 
 verify_include_dir
-copy_lib "libopus.a"
 copy_lib "libopus.0.dylib"
-
