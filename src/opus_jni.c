@@ -1,4 +1,4 @@
-#include <jni.h>
+//#include <jni.h> // can I have opus.h handle this 1x...?
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
