@@ -4,12 +4,11 @@
 #include "opus_jni.h"
 #include "opus.h"
 
-static const char *JNIT_CLASS = "interop/PrintLine";
+static const char *JNIT_CLASS = "interop/Koala";
 
 char logMsg[255];
 OpusDecoder *dec;
 OpusEncoder *enc;
-
 
 opus_int32 SAMPLING_RATE;
 int CHANNELS;
@@ -18,21 +17,17 @@ int FRAME_SIZE;
 int APPLICATION_TYPE = OPUS_APPLICATION_VOIP;
 const int MAX_PAYLOAD_BYTES = 1500;
 
-
-static jboolean opus_init_encoder (JNIEnv *env, jobject obj, jint samplingRate, jint numberOfChannels, jint frameSize)
-{
+static jboolean opus_init_encoder (JNIEnv *env, jobject obj, jint samplingRate, jint numberOfChannels, jint frameSize){
     FRAME_SIZE = frameSize;
     SAMPLING_RATE = samplingRate;
     CHANNELS = numberOfChannels;
 
-    int error;
     int size;
+    int error;
 
-    size = opus_encoder_get_size(1);
-    enc = malloc(size);
-    error = opus_encoder_init(enc, SAMPLING_RATE, CHANNELS, APPLICATION_TYPE);
-
-    sprintf(logMsg, "Initialized Encoder with ErrorCode: %d", error);
+    size = opus_decoder_get_size(CHANNELS);
+    dec = malloc(size);
+    error = opus_decoder_init(dec, SAMPLING_RATE, CHANNELS);
 
     return error;
 }
@@ -118,11 +113,10 @@ static jboolean opus_release_decoder (JNIEnv *env, jobject obj){
     return 1;
 }
 
-
 static JNINativeMethod funcs[] = {
-        { "opus_init_decoder", "(III)Z", (void *)&opus_init_encoder },
-        { "opus_decode_bytes", "([B[S)I", (void *)&opus_encode_bytes },
-        { "opus_release_decoder", "()Z", (void *)&opus_release_encoder },
+        { "opus_init_encoder", "(III)Z", (void *)&opus_init_encoder },
+        { "opus_encode_bytes", "([S[B)I", (void *)&opus_encode_bytes },
+        { "opus_release_encoder", "()Z", (void *)&opus_release_encoder },
         { "opus_init_decoder", "(III)Z", (void *)&opus_init_decoder },
         { "opus_decode_bytes", "([B[S)I", (void *)&opus_decode_bytes },
         { "opus_release_decoder", "()Z", (void *)&opus_release_decoder }
