@@ -4,7 +4,7 @@
 #include "opus_jni.h"
 #include "opus.h"
 
-static const char *JNIT_CLASS = "interop/Koala";
+static const char *JNIT_CLASS = "koala/OpusWrapperImpl";
 
 char logMsg[255];
 OpusDecoder *dec;
@@ -25,9 +25,11 @@ static jboolean opus_init_encoder (JNIEnv *env, jobject obj, jint samplingRate, 
     int size;
     int error;
 
-    size = opus_decoder_get_size(CHANNELS);
-    dec = malloc(size);
-    error = opus_decoder_init(dec, SAMPLING_RATE, CHANNELS);
+    size = opus_encoder_get_size(1);
+    enc = malloc(size);
+    error = opus_encoder_init(enc, SAMPLING_RATE, CHANNELS, APPLICATION_TYPE);
+
+    sprintf(logMsg, "Initialized Encoder with ErrorCode: %d", error);
 
     return error;
 }
